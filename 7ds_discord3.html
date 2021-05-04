@@ -1,0 +1,4826 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>7ds Resident Evil - основной</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.preserve-whitespace {
+    white-space: pre-wrap;
+}
+
+.spoiler {
+    /* width: fit-content; */
+    display: inline-block;
+    /* This is more consistent across browsers, the old attribute worked well under Chrome but not FireFox. */
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image * {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 100%;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__reference-symbol {
+    grid-column: 1;
+    border-style: solid;
+    border-width: 2px 0 0 2px;
+    border-radius: 8px 0 0 0;
+    margin-left: 16px;
+    margin-top: 8px;
+}
+
+.chatlog__reference {
+    display: flex;
+    grid-column: 2;
+    margin-left: 1.2em;
+    margin-bottom: 0.25em;
+    font-size: 0.875em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+}
+
+.chatlog__reference-avatar {
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    margin-right: 0.25em;
+}
+
+.chatlog__reference-name {
+    margin-right: 0.25em;
+    font-weight: 600;
+}
+
+.chatlog__reference-link {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chatlog__reference-link:hover {
+    text-decoration: none;
+}
+
+.chatlog__reference-content > * {
+    display: inline;
+}
+
+.chatlog__reference-edited-timestamp {
+    margin-left: 0.25em;
+    font-size: 0.8em;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__attachment-container {
+    height: 40px;
+    width: 100%;
+    max-width: 520px;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.chatlog__attachment-icon {
+    float: left;
+    height: 100%;
+    margin-right: 10px;
+}
+
+.chatlog__attachment-icon > .a {
+    fill: #f4f5fb;
+    d: path("M50,935a25,25,0,0,1-25-25V50A25,25,0,0,1,50,25H519.6L695,201.32V910a25,25,0,0,1-25,25Z");
+}
+
+.chatlog__attachment-icon > .b {
+    fill: #7789c4;
+    d: path("M509.21,50,670,211.63V910H50V50H509.21M530,0H50A50,50,0,0,0,0,50V910a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50h0V191Z");
+}
+
+.chatlog__attachment-icon > .c {
+    fill: #f4f5fb;
+    d: path("M530,215a25,25,0,0,1-25-25V50a25,25,0,0,1,16.23-23.41L693.41,198.77A25,25,0,0,1,670,215Z");
+}
+
+.chatlog__attachment-icon > .d {
+    fill: #7789c4;
+    d: path("M530,70.71,649.29,190H530V70.71M530,0a50,50,0,0,0-50,50V190a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50Z");
+}
+
+.chatlog__attachment-filesize {
+    color: #72767d;
+    font-size: 12px;
+}
+
+.chatlog__attachment-filename {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__reference-symbol {
+    border-color: #4f545c;
+}
+
+.chatlog__reference {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link:hover {
+    color: #ffffff;
+}
+
+.chatlog__reference-edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__attachment-container {
+    background-color: #2f3136;
+    border-color: #292b2f;
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="7ds_discord3.html_Files/bfeb2a7a61f9b4e4b8e56e782663cbde-9F439.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">7ds Resident Evil</div>
+        <div class="preamble__entry">Текстовые каналы / основной</div>
+
+
+            <div class="preamble__entry preamble__entry--small">
+Between 04-May-21 06:40 PM and 04-May-21 07:34 PM            </div>
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="839164506282131566" id="message-839164506282131566">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Потом добиваю его распрыжкой / ударом.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839161331969687583&#39;)">
+                    <span class="chatlog__reference-content">
+Ты, мне кажется, предлагаешь какой-то страшный западный сайт использовать!                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:41 PM</span>
+
+            <div class="chatlog__message " data-message-id="839164739754000405" id="message-839164739754000405">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Тебя, видимо, по ip забанили. У меня открылась классика.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839164739754000405&#39;)">
+                    <span class="chatlog__reference-content">
+Тебя, видимо, по ip забанили. У меня открылась классика.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:41 PM</span>
+
+            <div class="chatlog__message " data-message-id="839164820880228402" id="message-839164820880228402">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да я шучу, ясное дело, что ютуб должен быть доступен.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839164919656087583" id="message-839164919656087583">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Пока...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:41 PM</span>
+
+            <div class="chatlog__message " data-message-id="839164942245953586" id="message-839164942245953586">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">:) Но про рутуб мысль хорошая!</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="839164993567457320" id="message-839164993567457320">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Эти дегенераты явно решили завинтить просто все гайки, что есть.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839165031319863316" id="message-839165031319863316">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">То есть закрытие ютуба - это реальность вероятная.</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 06:42 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839165073200382012" id="message-839165073200382012">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Надеюсь, всё же, что не сделают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:43 PM</span>
+
+            <div class="chatlog__message " data-message-id="839165228779438120" id="message-839165228779438120">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Блин, РКН телеграм забанить не может нормально... И трекеры. И в Ютюб будем ходить.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:43 PM</span>
+
+            <div class="chatlog__message " data-message-id="839165299353321502" id="message-839165299353321502">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">В Китае тоже ходят, ага )))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839165353095069696" id="message-839165353095069696">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">И в Северной Корее, вероятно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="839165731467296859" id="message-839165731467296859">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Кому надо - ходят. Просто с большим геморроем. А так, да, персональный китайнет с фаерволами по контуру.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="839165850233733121" id="message-839165850233733121">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну как обычно всё. Подпольный ютуб, класс. Свободная страна )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="839166766331985950" id="message-839166766331985950">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">У всех так. Апи в mail не может зайти. И, говорят, в штатах, оплоте демократии, целую сеть прикрыли.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839166905331875871" id="message-839166905331875871">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А уж как Фейсбук посты модерирует...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839167332534321162" id="message-839167332534321162">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Главное, чтобы они вовсе сеть не уронили, рукожопы...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:51 PM</span>
+
+            <div class="chatlog__message " data-message-id="839167335603503184" id="message-839167335603503184">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">У всех так, ага. Просто у всех )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839167389793779763" id="message-839167389793779763">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Крупнейший видерохостинг закрыт. Просто у всех так )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839167406886486077" id="message-839167406886486077">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А, нет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839167560234303519" id="message-839167560234303519">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Так только в отсталых говностранах, где не демократия, а диктатура.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839167585042825277" id="message-839167585042825277">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А, хотя норм, всё сходится.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="839167595545886720" id="message-839167595545886720">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, я говорю, у меня открывается... Просто тебя не любят.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="839167621689114634" id="message-839167621689114634">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Пока открывается.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="839167919752872016" id="message-839167919752872016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, так пока тебя и не посадили за &quot;говностраны&quot;. Пользуйся!
+А там и не нужно уже станет...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839168003698196500" id="message-839168003698196500">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">(я не серьёзно это, если что. Не обижайся)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839168260057595974" id="message-839168260057595974">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Рулить сеткой так или иначе будут. Особенно к выборам. Чтобы пресечь инакомыслие. Это предсказуемо.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839168482888646747" id="message-839168482888646747">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А ходить на митинги за Ютюб, в котором и говна полно...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="839168557710966848" id="message-839168557710966848">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Главное, чтобы всех это устраивало. Ведь это &quot;предсказуемо&quot;, а, значит, нормально.</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 06:56 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:58 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169117340434472" id="message-839169117340434472">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">О, а нормально, что Ютюб сам там банит людей? Я бы послушал политику в более прямом исполнении. А то Навального ругать нельзя, про Украину плохо - нельзя...
+Ну и х..й с ним, пусть сам барахтается, ангажированный рупор демократи.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169296894394378" id="message-839169296894394378">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Почему? Всякие отбросы типа Соловьёва там цветут и пахнут.
+Правда удивляются, что их никто не смотрит, но это ладно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 06:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169453047545916" id="message-839169453047545916">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Свобода слова - это не значит, что можно просто так кого угодно говном поливать.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839169636544282664" id="message-839169636544282664">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, наальнята позорные там тоже зажигают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169679872360458" id="message-839169679872360458">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Почему просто так? Пропагандисты за это из бюджета получают в прямом смысле миллиарды (смотри РТ).</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169731600318506" id="message-839169731600318506">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а непропогандисты из бюждета другой страны, да?)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839169807571222548" id="message-839169807571222548">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">давно пора привыкнуть что везде идет борьба за власть, и никто ее не отдаст</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169819764064317" id="message-839169819764064317">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">&quot;Навальнята&quot; имеют просмотри миллионные )
+Сраным пропагандонам это не снилось.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:01 PM</span>
+
+            <div class="chatlog__message " data-message-id="839169873497817110" id="message-839169873497817110">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">хочешь жить с бабочками - дорога в исландию или аналогичную страну на краю земли, которая ни на что не претендует</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839169936185360394" id="message-839169936185360394">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">в остальных, где хоть какая-то движуха есть, везде будут драться за бабки, власть</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2ee11c34c663eef974bd010fcdc7ffd9-55BD6.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Morturnaur#1267" data-user-id="398808012271255562" style="color: rgb(194,124,14)">Morturnaur</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170029596966922" id="message-839170029596966922">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Кстати, ребзя)
+Вопрос , а что такого обновили? Я искал, и не нашёл х)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839169731600318506&#39;)">
+                    <span class="chatlog__reference-content">
+а непропогандисты из бюждета другой страны, да?)                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170059716263967" id="message-839170059716263967">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, это, как всегда, доказать ты же не можешь верно?
+Пруфов нет, то есть опять либо фантазии, либо враньё.
+Тебе кем больше нравится быть, фантазёром или вруном? Выбирай.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170062869856316" id="message-839170062869856316">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ничего, просто минипатч</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2ee11c34c663eef974bd010fcdc7ffd9-55BD6.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Morturnaur#1267" data-user-id="398808012271255562" style="color: rgb(194,124,14)">Morturnaur</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170134735454259" id="message-839170134735454259">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ок</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170138325385217" id="message-839170138325385217">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну так и вот... Пропаганда того, что Россия - говнострана и надо устроить революцию, мне не заходит. Пусть выключают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839170059716263967&#39;)">
+                    <span class="chatlog__reference-content">
+Ну, это, как всегда, доказать ты же не можешь верно?
+Пруфов нет, то есть опять либо фантазии, либо враньё.
+Тебе кем больше нравится быть, фантазёром или вруном? Выбирай.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170150971998258" id="message-839170150971998258">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а я не вижу смысла доказывать тебе что-то в области политики)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839170242244247572" id="message-839170242244247572">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">мы уже приходили к тому, что ни ты мне ничего доказать не можешь, ни я тебе</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839169819764064317&#39;)">
+                    <span class="chatlog__reference-content">
+&quot;Навальнята&quot; имеют просмотри миллионные )
+Сраным пропагандонам это не снилось.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170349307789312" id="message-839170349307789312">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Жаль, что у нас миллионы долбоебов в стране. Очень жаль</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170394492764232" id="message-839170394492764232">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты делаешь утверждение. Что оппозиции платят из бюджета других стран.
+Доказать это ты не можешь (потому что это враньё).
+Стало быть ты или врун или фантазёр.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170409243869184" id="message-839170409243869184">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">навальнята имеют лажовые просмотры миллионами</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839170434712862821" id="message-839170434712862821">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тот же байт на замок путина</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170469017026561" id="message-839170469017026561">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я делаю утверждение, что РТ оплачивается из бюджета РФ (из моего кармана).</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:04 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170471462699019" id="message-839170471462699019">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">по статистике его полностью посмотрели что-то около 5% людей</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170486147481670" id="message-839170486147481670">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Доказать это могу.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170703328280596" id="message-839170703328280596">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Кстати, я тоже начинал смотреть. Ниасилил. Но просмотр...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:04 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170704598892614" id="message-839170704598892614">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">если говно воняет говном, то не надо доказывать, что оно воняет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839170703328280596&#39;)">
+                    <span class="chatlog__reference-content">
+Кстати, я тоже начинал смотреть. Ниасилил. Но просмотр...                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170774102311013" id="message-839170774102311013">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а я вот вложил честный просмотр в эти 100 млн ненастоящих</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839170349307789312&#39;)">
+                    <span class="chatlog__reference-content">
+Жаль, что у нас миллионы долбоебов в стране. Очень жаль                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170777865519104" id="message-839170777865519104">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">К сожалению, их куда больше. Их, в общем-то, большинство.
+Тех самых, чья хата с краю и кому &quot;вы помните девяностые и кровавый майдан&quot;.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170793103294475" id="message-839170793103294475">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и ничего интересного там не нашел</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170809624264744" id="message-839170809624264744">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">С промытыми могзами, короче.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="839170836971520030" id="message-839170836971520030">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">какой-то полет фантазий и супер расследование покруче шпионов</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:05 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171201812529152" id="message-839171201812529152">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">с одной стороны рассказывают, как там все охраняется и запретная зона, а с другой чуваки на лодке туда приплыли и дроном летают снимают</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839170777865519104&#39;)">
+                    <span class="chatlog__reference-content">
+К сожалению, их куда больше. Их, в общем-то, большинство.
+Тех самых, чья хата с краю и кому &quot;вы помните девяностые и кровавый майдан&quot;.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:06 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171204714987580" id="message-839171204714987580">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Помним, не хотим. В топку идите, шататели режима.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171285015199764" id="message-839171285015199764">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я и говорю, что согласен с тобой.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171333476712488" id="message-839171333476712488">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">С поправкой на то, что долбоёбов больше, чем ты думаешь.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839170809624264744&#39;)">
+                    <span class="chatlog__reference-content">
+С промытыми могзами, короче.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171380598538300" id="message-839171380598538300">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">У нас с тобой промывочная жмдкость от разных производителей.  Твоя - иностранная.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171398718193685" id="message-839171398718193685">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">их в обеих &quot;станах&quot; подавляющее большинство</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171444985954365" id="message-839171444985954365">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">но при этом из населения страны они меньшиство, что те, что другие</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171491068379176" id="message-839171491068379176">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">остальные просто живут и нахер бы все слали связанное с политикой</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171556495589406" id="message-839171556495589406">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">но то одни лезут, то другие</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839171380598538300&#39;)">
+                    <span class="chatlog__reference-content">
+У нас с тобой промывочная жмдкость от разных производителей.  Твоя - иностранная.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:08 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171700955414569" id="message-839171700955414569">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Смотри. Мы с тобой разговариваем всё время (ну, как обычно и бывает в диалогах с ватанами) на разных уровнях. Ты на уровне веры и сумрачных подозрений, я на уровне фактов.
+Ты на уровне фактов не можешь. Я не вижу смысла ставить на один уровень фактологию и фантазии (назовём это так).</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:08 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171763241353287" id="message-839171763241353287">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Дим, хватит уже манипулировать и подменять</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171787501600768" id="message-839171787501600768">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ты точно такие же факты приводишь, что и остальные в этом чате</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839171821014089749" id="message-839171821014089749">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">только ты почему-то в свои больше веришь, чем в другие</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171884565397575" id="message-839171884565397575">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да, к выборам начинается движуха в административном ресурсе - агитация, выбери нужного... И это отвратительно.
+Ну так и оппозиция ведёт себя аналогично. А рожи там тоже противные</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="839171902248583170" id="message-839171902248583170">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">&quot;их шпионы, наши герои&quot; и т.п.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:10 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172029844422687" id="message-839172029844422687">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Так. Ок. Я подменяю. Ещё раз.
+Моё утверждение. РТ имеет бюджет из моих налогов (спонсируется государством).
+Твоё утверждение. Оппозицию оплачивают западные (?) государства.
+Есть подтверждения у тебя? Правильно, нет.</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:10 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839172058624819212" id="message-839172058624819212">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вот так и ведутся разговоры.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:10 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172232970108938" id="message-839172232970108938">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">РТ - точно такая же пропагандистская машина, как и ББС, Нью Йорк таймс и прочие, но это не отменят того, что наши спонсируют нужные движения внутри чужих стран, а чужие страны в нашей</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:11 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839172326896697424" id="message-839172326896697424">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">или ты наивно полагаешь, что радио свободы и то, как впрягаются за навального - это из добродушных побуждений</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839172354361393233" id="message-839172354361393233">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">санкции вводят, а навальный только и рад</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:11 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172429855195216" id="message-839172429855195216">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не надо подтверждать мои слова. Я знаю, что &quot;РТ - точно такая же пропагандистская машина&quot;.
+Ты мне ответил на это, что оппозиция спонсируется другими государствами.
+То есть ты на мой факт ответил своей ложью. Зачем?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172471852105739" id="message-839172471852105739">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну так хайли лайкли</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172505256067072" id="message-839172505256067072">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну вот о чём и речь.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172519691812897" id="message-839172519691812897">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">вот вот</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839172546276360212" id="message-839172546276360212">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">святая наивность</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839171700955414569&#39;)">
+                    <span class="chatlog__reference-content">
+Смотри. Мы с тобой разговариваем всё время (ну, как обычно и бывает в диалогах с ватанами) на разных уровнях. Ты на уровне веры и сумрачных подозрений, я на уровне фактов.
+Ты на уровне фактов не можешь. Я не вижу смысла ставить на один уровень фактологию и фантазии (назовём это так).                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172568224890932" id="message-839172568224890932">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да потому что я не повернут на этом. И копать документы по оплате - мне не по уровню. Но из тезиса &quot;кому выгодно&quot;, хайли лайкли оппозиция спонсируется из-за границы</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172582087327764" id="message-839172582087327764">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Собственно, на этом и предлагаю разговор окончить )
+Фактов нет, есть враньё, домыслы и подозрения.</span>
+
+                                <span class="chatlog__edited-timestamp" title="04-May-21 07:12 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172639234719784" id="message-839172639234719784">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">вот поэтому с вами навальнятами и не интересно</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172687460171846" id="message-839172687460171846">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">С вами, ватанами, ещё менее интересно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172708285284382" id="message-839172708285284382">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><img class="emoji emoji--large" alt="688822522241876044" title="688822522241876044" src="https://cdn.discordapp.com/emojis/731915618022064148.png"></span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172714660626493" id="message-839172714660626493">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вы же не умеете в фактологию.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839172744008433725" id="message-839172744008433725">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вам нечем свои слова подверждать</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172744968929291" id="message-839172744968929291">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172756099956736" id="message-839172756099956736">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Кроме хайли лайкли.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172767504007168" id="message-839172767504007168">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">все, да</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172874887233536" id="message-839172874887233536">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Дим, фотку платёжки Соловьёву пришлешь? Или РТ сказало и ты им веришь?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172977425776670" id="message-839172977425776670">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">газпром вообще очень известное эхо мацы спонсирует</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="839172984463163433" id="message-839172984463163433">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Причём тут Соловьёв?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173030865272832" id="message-839173030865272832">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я сказал, что всё РТ оплачивается государством.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173039026339871" id="message-839173039026339871">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Пропагандон же ..</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173167050129449" id="message-839173167050129449">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А... Ну, платёжки по РТ? Есть8</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173269399142430" id="message-839173269399142430">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">у Димы просто опровержения уровня &quot;Не пойман не вор&quot;, все в деревне знают, что цыгане наркотой торгуют, а он их защищать будет, так как за руку не поймали</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839173167050129449&#39;)">
+                    <span class="chatlog__reference-content">
+А... Ну, платёжки по РТ? Есть8                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173364672233563" id="message-839173364672233563">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Какие платёжки? Это <strong>государственный</strong> канал?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173418736680980" id="message-839173418736680980">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Или частный?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173465914343424" id="message-839173465914343424">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я подскажу</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173487544631366" id="message-839173487544631366">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А то сложно тебе, видимо</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173500392570950" id="message-839173500392570950">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Государственный</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173517123125268" id="message-839173517123125268">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а почему штаб навального прикрыли? и всех этих друзей его?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173553843994645" id="message-839173553843994645">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Федеральное государственное унитарное предприятие &#171;Международное информационное агентство „Россия сегодня“&#187;</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839173517123125268&#39;)">
+                    <span class="chatlog__reference-content">
+а почему штаб навального прикрыли? и всех этих друзей его?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173672429158461" id="message-839173672429158461">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">И правда. Ведь во всех странах перед выборами полностью уничтожают оппозицию. Почему бы не произойти такому у нас.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173680713957376" id="message-839173680713957376">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ах нет.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173699793584148" id="message-839173699793584148">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Нигде так не делают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173769574613072" id="message-839173769574613072">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Внезапно они все оказались хуже, чем Алькаида )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173799542521856" id="message-839173799542521856">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да толку, даже есть допустить до выборов, все равно их никто не выберет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173800943026187" id="message-839173800943026187">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Хайли лайкли, что это правда.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173819280130080" id="message-839173819280130080">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">будет типичные 5-10% не больше</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173953657241671" id="message-839173953657241671">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">можно конечно жить в своем мирке, где все население поддерживает навального, это просто злобный мордор ему мешает и проценты не те рисует</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="839173968585293824" id="message-839173968585293824">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ага, то-то сам Навальный на выборах мэра Москвы набрал больше 27%.
+Ведь это же 5-10% )))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839173975963467867" id="message-839173975963467867">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Как обычно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174006359588884" id="message-839174006359588884">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Факты подменяются ложью и фантазиями.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:17 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174029620805633" id="message-839174029620805633">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ага, а в прогрессивной ЛА голосуют за БЛМ и либерастов</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174081408532530" id="message-839174081408532530">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">всегда было так, что где больше денег, там больше недовольных и с жиру бесятся</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174111266996234" id="message-839174111266996234">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">что у нас, что в США, что в бриташке</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174238111662170" id="message-839174238111662170">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я уже писал (и даже ссылку давал на научное исследование).
+Если коротко, то таких как вы (ватанов) всегда больше. Это нормально.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174264275992587" id="message-839174264275992587">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">больше собственно кроме 27% и гордиться нечем</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174281757458435" id="message-839174281757458435">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Но не нужно большинства, чтобы что-то поменять.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174291118620743" id="message-839174291118620743">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">К счастью.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174312392654929" id="message-839174312392654929">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это же большая часть населения москвы</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839173364672233563&#39;)">
+                    <span class="chatlog__reference-content">
+Какие платёжки? Это <strong>государственный</strong> канал?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174324291895305" id="message-839174324291895305">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну и что? Мало ли, что написано (упарываться так до конца)... Финансовые документы есть?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839174324291895305&#39;)">
+                    <span class="chatlog__reference-content">
+Ну и что? Мало ли, что написано (упарываться так до конца)... Финансовые документы есть?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174527853527070" id="message-839174527853527070">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я не понял, чего ты от меня хочешь. Чтобы я за тебя поискал конкретные суммы?
+Мне это неинтересно. Факт налицо. Госкомпания, которая за мои деньги делает пропаганду по всему миру. Это даже никто не отрицает.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174555729395773" id="message-839174555729395773">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ооо, началось</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174625346846800" id="message-839174625346846800">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я же не говорил, что они получают конкретно 100500 денег.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DAX#5960" data-user-id="727974459549679707" style="color: rgb(0,255,200)">DAX</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174714936655952" id="message-839174714936655952">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">За себя поищи, раз от нас требуешь подтверждения проплаченности оппозиции.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174720666206248" id="message-839174720666206248">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я говорю про факт финансирования государством государственной же компании.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/6590f8bac1afc3be0d1cd064e05593bc-B8A8C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DAX#5960" style="color: rgb(0,255,200)">DAX</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839174714936655952&#39;)">
+                    <span class="chatlog__reference-content">
+За себя поищи, раз от нас требуешь подтверждения проплаченности оппозиции.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174787883860088" id="message-839174787883860088">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты же мне ничего не привёл. Кроме своих влажных фантазий.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174819776954408" id="message-839174819776954408">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">И не приведёшь. Потому что враньё очевидное.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174863338864651" id="message-839174863338864651">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тебе счета биткоина привести что ли?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174869618917418" id="message-839174869618917418">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">или что?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174906629193828" id="message-839174906629193828">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и доказать что именно они навальному принадлежат и его друзьям?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="839174911032426578" id="message-839174911032426578">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Подтверждение утверждения.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839174994780749824" id="message-839174994780749824">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я вот уверен, что Навальный действовал на деньги с пожертвований.
+Факт подтверждённый документами.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175031421403136" id="message-839175031421403136">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">нимба у него нет?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175047817854977" id="message-839175047817854977">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты утверждаешь, что его спонсирует запад. Докажи.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175134568251432" id="message-839175134568251432">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">пора новую религию запускать</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175220447019048" id="message-839175220447019048">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Если ты не можешь свои слова подтвердить, то ты либо фантазёр, либо врун. Я уже предложил тебе выбрать, как лучше тебя идентифицировать.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175382321332272" id="message-839175382321332272">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну ясно &quot;Не пойман не вор&quot;</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175459580936272" id="message-839175459580936272">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">почему тогда веришь, что дворец путина?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175598986231810" id="message-839175598986231810">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вот, пожалуйста. Подконтрольное сми (кто там, Газпром или кто) РБК.
+Занимаются финансами и т.д.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="7ds_discord3.html_Files/unknown-FECC3.png">
+                                        <img class="chatlog__attachment-thumbnail" src="7ds_discord3.html_Files/unknown-FECC3.png" alt="Image attachment" title="Image: unknown.png (167,28 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175640745902190" id="message-839175640745902190">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Есть даже конкретные значение.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175651838918727" id="message-839175651838918727">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а где тут эхо москвы?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175657262940160" id="message-839175657262940160">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Удивительно интересно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;839175459580936272&#39;)">
+                    <span class="chatlog__reference-content">
+почему тогда веришь, что дворец путина?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175744613646386" id="message-839175744613646386">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Классно ты умеешь приписывать мне слова, которых я не говорил.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175754432118894" id="message-839175754432118894">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я не верю.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175797478260786" id="message-839175797478260786">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну т.е. ты считаешь, что навальный лажу снял и пропагандирует?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175829673082951" id="message-839175829673082951">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Нет, так я тоже не считаю.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175842898640998" id="message-839175842898640998">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну давай, напрягись.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175845708824587" id="message-839175845708824587">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">он же без доказательств это сделал</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175876163665951" id="message-839175876163665951">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Нет, это тоже неправда.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175903539363851" id="message-839175903539363851">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Пруфов там вагон. Но...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839175925572698142" id="message-839175925572698142">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">как неправда? ролик называется &quot;Дворец Путина&quot;</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839175943825260565" id="message-839175943825260565">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">где там хоть раз имя его фигурировало</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176005297766423" id="message-839176005297766423">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не можешь напрячься, понимаю.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176018941837353" id="message-839176018941837353">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Так вот.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:25 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176039228899368" id="message-839176039228899368">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ты стрелки не переводи)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176065225719890" id="message-839176065225719890">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тебя тем же самым макнули</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176068182179901" id="message-839176068182179901">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Так это ты их перевёл.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176151028727869" id="message-839176151028727869">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">твое божество соврало в очередной раз, а хомячки повелись</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176165255151676" id="message-839176165255151676">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и накрутили просмотры</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176181970239528" id="message-839176181970239528">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">С моего предложения подтвердить свои слова на приписывание мне того, чего я никогда не говорил.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176229461688400" id="message-839176229461688400">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну т.е. навальный лжец?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176234797236294" id="message-839176234797236294">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ага, накрутил, хомячки и божество</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176241642209370" id="message-839176241642209370">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">он соврал, получается</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176251893088306" id="message-839176251893088306">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ватный пукан рвётся</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176265210658816" id="message-839176265210658816">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Береги его )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176316536356874" id="message-839176316536356874">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну мне пока нечего за свой переживать, это ты на митинги ходишь)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176377147588698" id="message-839176377147588698">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">интересно, если бы тебя приняли, потом бы на видео тоже рассказывал, что ошибался?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176388422271016" id="message-839176388422271016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">был неправ, все дела</span>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction">
+                                <img class="emoji emoji--small" alt="&#128514;" title="&#128514;" src="7ds_discord3.html_Files/1f602-8A1BE.png">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176437906538576" id="message-839176437906538576">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты прекращай всех людей мерить по себе.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176463605301258" id="message-839176463605301258">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, знаешь, не все такие )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176631905681418" id="message-839176631905681418">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Люди, готовые подлизывать любой власти, лишь бы их не трогали, и менять своё мнение в угоду сладкой жизни... Впрочем, не переживай, вас, таких, много.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839176645294161951" id="message-839176645294161951">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Большинство, наверное )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="839176780421791754" id="message-839176780421791754">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да почему подлизывать?
+пока что тут только ты подлизываешь навальному
+мне или Даксу пофиг на политиков и прочих, главное, чтоб простому люду не мешали</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177058638495814" id="message-839177058638495814">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">или ты думаешь, что я верю, что политики наши святые такие? никто не ворует и т.п.? да все там воруют
+только вот ты почему-то веришь, что придет навальный и все станет хорошо
+не станет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="839177161457664011" id="message-839177161457664011">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Так вот. Продолжу свою мысль. 
+Есть расследование. Проведённое на основе информации из открытых источников.
+Вот там именно что хайли лайкли. То есть нет железобетонных 100% подтверждений.
+Почему их нет? Да всё просто. Потому что это частный человек, без полномочий, без доступов.
+Сделал интересную работу. Что нужно сделать (и что сделали бы в любой нормальной стране)?
+Ну, давай, ты сможешь... Подскажу, это то же, что нужно сделать, если главный оппозиционер страны внезапно впадает в кому на несколько недель... Ну, давай.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177269766782986" id="message-839177269766782986">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ещё одна подсказка.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="839177271214211153" id="message-839177271214211153">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">бухать меньше будет и тусить по вечеринкам</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="839177297369235486" id="message-839177297369235486">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Понятно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177350696402974" id="message-839177350696402974">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Но ответ неверный.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177419033804800" id="message-839177419033804800">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Основанный, как обычно, не на фактах, а на вранье.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177441434927144" id="message-839177441434927144">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">То есть, логично, что он неверный.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177466907721758" id="message-839177466907721758">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А теперь, внимание, верный ответ.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177678883389461" id="message-839177678883389461">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Нужно запустить прозрачное и открытое расследование.
+Следственный комитет, ФСБ и т.д. Именно так и делают во всех нормальных странах, когда случаются подобные события.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177718763487232" id="message-839177718763487232">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">И то чего никогда не делают у нас, к сожалению.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="839177840338665525" id="message-839177840338665525">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Но ты продолжай жить в своём манямирке, где все топят за плешивого, где страна развивается (а не катится в экономическую пропасть), где всё хорошо.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord3.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">04-May-21 07:33 PM</span>
+
+            <div class="chatlog__message " data-message-id="839178005498036248" id="message-839178005498036248">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">навальный придет порядок наведет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 194 message(s)</div>
+</div>
+
+</body>
+
+</html>
