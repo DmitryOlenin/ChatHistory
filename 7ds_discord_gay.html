@@ -1,0 +1,5045 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>7ds Resident Evil - основной</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        /* General */
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-300.woff);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-400.woff);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-500.woff);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-600.woff);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Whitney;
+    src: url(https://cdn.jsdelivr.net/gh/Tyrrrz/DiscordFonts@master/whitney-700.woff);
+    font-weight: 700;
+}
+
+body {
+    font-family: "Whitney", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    object-fit: contain;
+}
+
+.markdown {
+    max-width: 100%;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+}
+
+.preserve-whitespace {
+    white-space: pre-wrap;
+}
+
+.spoiler {
+    /* width: fit-content; */
+    display: inline-block;
+    /* This is more consistent across browsers, the old attribute worked well under Chrome but not FireFox. */
+}
+
+.spoiler--hidden {
+    cursor: pointer;
+}
+
+.spoiler-text {
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-text {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler--hidden .spoiler-text::selection {
+    color: rgba(0, 0, 0, 0);
+}
+
+.spoiler-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.spoiler--hidden .spoiler-image {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler--hidden .spoiler-image * {
+    filter: blur(44px);
+}
+
+.spoiler--hidden .spoiler-image:after {
+    content: "SPOILER";
+    color: #dcddde;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 600;
+    padding: 100%;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    font-size: 0.9em;
+}
+
+.spoiler--hidden:hover .spoiler-image:after {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.quote {
+    margin: 0.1em 0;
+    padding-left: 0.6em;
+    border-left: 4px solid;
+    border-radius: 3px;
+}
+
+.pre {
+    font-family: "Consolas", "Courier New", Courier, monospace;
+}
+
+.pre--multiline {
+    margin-top: 0.25em;
+    padding: 0.5em;
+    border: 2px solid;
+    border-radius: 5px;
+}
+
+.pre--inline {
+    padding: 2px;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+
+.mention {
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #7289da;
+    background: rgba(114, 137, 218, .1);
+    font-weight: 500;
+}
+
+.emoji {
+    width: 1.25em;
+    height: 1.25em;
+    margin: 0 0.06em;
+    vertical-align: -0.4em;
+}
+
+.emoji--small {
+    width: 1em;
+    height: 1em;
+}
+
+.emoji--large {
+    width: 2.8em;
+    height: 2.8em;
+}
+
+/* Preamble */
+
+.preamble {
+    display: grid;
+    margin: 0 0.3em 0.6em 0.3em;
+    max-width: 100%;
+    grid-template-columns: auto 1fr;
+}
+
+.preamble__guild-icon-container {
+    grid-column: 1;
+}
+
+.preamble__guild-icon {
+    max-width: 88px;
+    max-height: 88px;
+}
+
+.preamble__entries-container {
+    grid-column: 2;
+    margin-left: 0.6em;
+}
+
+.preamble__entry {
+    font-size: 1.4em;
+}
+
+.preamble__entry--small {
+    font-size: 1em;
+}
+
+/* Chatlog */
+
+.chatlog {
+    max-width: 100%;
+}
+
+.chatlog__message-group {
+    display: grid;
+    margin: 0 0.6em;
+    padding: 0.9em 0;
+    border-top: 1px solid;
+    grid-template-columns: auto 1fr;
+}
+
+.chatlog__reference-symbol {
+    grid-column: 1;
+    border-style: solid;
+    border-width: 2px 0 0 2px;
+    border-radius: 8px 0 0 0;
+    margin-left: 16px;
+    margin-top: 8px;
+}
+
+.chatlog__reference {
+    display: flex;
+    grid-column: 2;
+    margin-left: 1.2em;
+    margin-bottom: 0.25em;
+    font-size: 0.875em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    align-items: center;
+}
+
+.chatlog__reference-avatar {
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+    margin-right: 0.25em;
+}
+
+.chatlog__reference-name {
+    margin-right: 0.25em;
+    font-weight: 600;
+}
+
+.chatlog__reference-link {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chatlog__reference-link:hover {
+    text-decoration: none;
+}
+
+.chatlog__reference-content > * {
+    display: inline;
+}
+
+.chatlog__reference-edited-timestamp {
+    margin-left: 0.25em;
+    font-size: 0.8em;
+}
+
+.chatlog__author-avatar-container {
+    grid-column: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.chatlog__author-avatar {
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+.chatlog__messages {
+    grid-column: 2;
+    margin-left: 1.2em;
+    min-width: 50%;
+}
+
+.chatlog__author-name {
+    font-weight: 500;
+}
+
+.chatlog__timestamp {
+    margin-left: 0.3em;
+    font-size: 0.75em;
+}
+
+.chatlog__message {
+    padding: 0.1em 0.3em;
+    margin: 0 -0.3em;
+    background-color: transparent;
+    transition: background-color 1s ease;
+}
+
+.chatlog__content {
+    font-size: 0.95em;
+    word-wrap: break-word;
+}
+
+.chatlog__edited-timestamp {
+    margin-left: 0.15em;
+    font-size: 0.8em;
+}
+
+.chatlog__attachment {
+    margin-top: 0.3em;
+}
+
+.chatlog__attachment-thumbnail {
+    vertical-align: top;
+    max-width: 45vw;
+    max-height: 500px;
+    border-radius: 3px;
+}
+
+.chatlog__attachment-container {
+    height: 40px;
+    width: 100%;
+    max-width: 520px;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.chatlog__attachment-icon {
+    float: left;
+    height: 100%;
+    margin-right: 10px;
+}
+
+.chatlog__attachment-icon > .a {
+    fill: #f4f5fb;
+    d: path("M50,935a25,25,0,0,1-25-25V50A25,25,0,0,1,50,25H519.6L695,201.32V910a25,25,0,0,1-25,25Z");
+}
+
+.chatlog__attachment-icon > .b {
+    fill: #7789c4;
+    d: path("M509.21,50,670,211.63V910H50V50H509.21M530,0H50A50,50,0,0,0,0,50V910a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50h0V191Z");
+}
+
+.chatlog__attachment-icon > .c {
+    fill: #f4f5fb;
+    d: path("M530,215a25,25,0,0,1-25-25V50a25,25,0,0,1,16.23-23.41L693.41,198.77A25,25,0,0,1,670,215Z");
+}
+
+.chatlog__attachment-icon > .d {
+    fill: #7789c4;
+    d: path("M530,70.71,649.29,190H530V70.71M530,0a50,50,0,0,0-50,50V190a50,50,0,0,0,50,50H670a50,50,0,0,0,50-50Z");
+}
+
+.chatlog__attachment-filesize {
+    color: #72767d;
+    font-size: 12px;
+}
+
+.chatlog__attachment-filename {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.chatlog__embed {
+    display: flex;
+    margin-top: 0.3em;
+    max-width: 520px;
+}
+
+.chatlog__embed-color-pill {
+    flex-shrink: 0;
+    width: 0.25em;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.chatlog__embed-content-container {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em 0.6em;
+    border: 1px solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.chatlog__embed-content {
+    display: flex;
+    width: 100%;
+}
+
+.chatlog__embed-text {
+    flex: 1;
+}
+
+.chatlog__embed-author {
+    display: flex;
+    margin-bottom: 0.3em;
+    align-items: center;
+}
+
+.chatlog__embed-author-icon {
+    margin-right: 0.5em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.chatlog__embed-author-name {
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-title {
+    margin-bottom: 0.2em;
+    font-size: 0.875em;
+    font-weight: 600;
+}
+
+.chatlog__embed-description {
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.chatlog__embed-fields {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.chatlog__embed-field {
+    flex: 0;
+    min-width: 100%;
+    max-width: 506px;
+    padding-top: 0.6em;
+    font-size: 0.875em;
+}
+
+.chatlog__embed-field--inline {
+    flex: 1;
+    flex-basis: auto;
+    min-width: 150px;
+}
+
+.chatlog__embed-field-name {
+    margin-bottom: 0.2em;
+    font-weight: 600;
+}
+
+.chatlog__embed-field-value {
+    font-weight: 500;
+}
+
+.chatlog__embed-thumbnail {
+    flex: 0;
+    margin-left: 1.2em;
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-image-container {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-image {
+    max-width: 500px;
+    max-height: 400px;
+    border-radius: 3px;
+}
+
+.chatlog__embed-footer {
+    margin-top: 0.6em;
+}
+
+.chatlog__embed-footer-icon {
+    margin-right: 0.2em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.chatlog__embed-footer-text {
+    font-size: 0.75em;
+    font-weight: 500;
+}
+
+.chatlog__reactions {
+    display: flex;
+}
+
+.chatlog__reaction {
+    display: flex;
+    align-items: center;
+    margin: 0.35em 0.1em 0.1em 0.1em;
+    padding: 0.2em 0.35em;
+    border-radius: 3px;
+}
+
+.chatlog__reaction-count {
+    min-width: 9px;
+    margin-left: 0.35em;
+    font-size: 0.875em;
+}
+
+.chatlog__bot-tag {
+    position: relative;
+    top: -.2em;
+    margin-left: 0.3em;
+    padding: 0.05em 0.3em;
+    border-radius: 3px;
+    vertical-align: middle;
+    line-height: 1.3;
+    background: #7289da;
+    color: #ffffff;
+    font-size: 0.625em;
+    font-weight: 500;
+}
+
+/* Postamble */
+
+.postamble {
+    margin: 1.4em 0.3em 0.6em 0.3em;
+    padding: 1em;
+    border-top: 1px solid;
+}
+    </style>
+    <style>
+        /* General */
+
+body {
+    background-color: #36393e;
+    color: #dcddde;
+}
+
+a {
+    color: #0096cf;
+}
+
+.spoiler-text {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.spoiler--hidden .spoiler-text {
+    background-color: #202225;
+}
+
+.spoiler--hidden:hover .spoiler-text {
+    background-color: rgba(32, 34, 37, 0.8);
+}
+
+.quote {
+    border-color: #4f545c;
+}
+
+.pre {
+    background-color: #2f3136 !important;
+}
+
+.pre--multiline {
+    border-color: #282b30 !important;
+    color: #b9bbbe !important;
+}
+
+/* === Preamble === */
+
+.preamble__entry {
+    color: #ffffff;
+}
+
+/* Chatlog */
+
+.chatlog__message-group {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.chatlog__reference-symbol {
+    border-color: #4f545c;
+}
+
+.chatlog__reference {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link {
+    color: #b5b6b8;
+}
+
+.chatlog__reference-link:hover {
+    color: #ffffff;
+}
+
+.chatlog__reference-edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__author-name {
+    color: #ffffff;
+}
+
+.chatlog__timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__message--highlighted {
+    background-color: rgba(114, 137, 218, 0.2) !important;
+}
+
+.chatlog__message--pinned {
+    background-color: rgba(249, 168, 37, 0.05);
+}
+
+.chatlog__attachment-container {
+    background-color: #2f3136;
+    border-color: #292b2f;
+}
+
+.chatlog__edited-timestamp {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.chatlog__embed-color-pill--default {
+    background-color: rgba(79, 84, 92, 1);
+}
+
+.chatlog__embed-content-container {
+    background-color: rgba(46, 48, 54, 0.3);
+    border-color: rgba(46, 48, 54, 0.6);
+}
+
+.chatlog__embed-author-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-author-name-link {
+    color: #ffffff;
+}
+
+.chatlog__embed-title {
+    color: #ffffff;
+}
+
+.chatlog__embed-description {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-field-name {
+    color: #ffffff;
+}
+
+.chatlog__embed-field-value {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__embed-footer {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.chatlog__reaction {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.chatlog__reaction-count {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Postamble */
+
+.postamble {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.postamble__entry {
+    color: #ffffff;
+}
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/solarized-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pre--multiline').forEach(block => hljs.highlightBlock(block));
+        });
+    </script>
+
+    <script>
+        function scrollToMessage(event, id) {
+            var element = document.getElementById('message-' + id);
+
+            if (element) {
+                event.preventDefault();
+
+                element.classList.add('chatlog__message--highlighted');
+
+                window.scrollTo({
+                    top: element.getBoundingClientRect().top - document.body.getBoundingClientRect().top - (window.innerHeight / 2),
+                    behavior: 'smooth'
+                });
+
+                window.setTimeout(function() {
+                    element.classList.remove('chatlog__message--highlighted');
+                }, 2000);
+            }
+        }
+
+        function showSpoiler(event, element) {
+            if (element && element.classList.contains('spoiler--hidden')) {
+                event.preventDefault();
+                element.classList.remove('spoiler--hidden');
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="preamble">
+    <div class="preamble__guild-icon-container">
+        <img class="preamble__guild-icon" src="7ds_discord_gay.html_Files/bfeb2a7a61f9b4e4b8e56e782663cbde-9F439.png" alt="Guild icon">
+    </div>
+    <div class="preamble__entries-container">
+        <div class="preamble__entry">7ds Resident Evil</div>
+        <div class="preamble__entry">Текстовые каналы / основной</div>
+
+
+            <div class="preamble__entry preamble__entry--small">
+After 07-May-21 12:38 PM            </div>
+    </div>
+</div>
+
+<div class="chatlog">
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 12:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="840160951113613312" id="message-840160951113613312">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да меня тошнит уже от геев</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 12:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="840161022240227359" id="message-840161022240227359">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Воу-воу</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840161035594760232" id="message-840161035594760232">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Палехчи</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 12:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840161042411159562" id="message-840161042411159562">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">почему в фильмах последнее время так сильно ПРАПАГАНДИРУЮТ это</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 12:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840161282370830357" id="message-840161282370830357">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я бы начал с того, что само словосочетание &quot;пропаганда гомосексуализма&quot; - это бред сивой кобылы. Сексуальная ориентация не приобретается, стало быть её нельзя &quot;пропагандировать&quot;.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840162968007868416" id="message-840162968007868416">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">К боссу готов <img class="emoji " alt="🙂" title="🙂" src="https://twemoji.maxcdn.com/2/72x72/1f642.png"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="chatlog__attachment">
+                        <div class="" onclick="">
+                            <div class="">
+                                    <a href="7ds_discord_gay.html_Files/unknown-07106.png">
+                                        <img class="chatlog__attachment-thumbnail" src="7ds_discord_gay.html_Files/unknown-07106.png" alt="Image attachment" title="Image: unknown.png (43,38 KB)">
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840163078019874817" id="message-840163078019874817">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ещё придётся суперпробудить, наверное... Но это потом.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tadashi (Ruslan Mamedov)#6513" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840160951113613312&#39;)">
+                    <span class="chatlog__reference-content">
+да меня тошнит уже от геев                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2ee11c34c663eef974bd010fcdc7ffd9-55BD6.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Morturnaur#1267" data-user-id="398808012271255562" style="color: rgb(194,124,14)">Morturnaur</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840171249912119357" id="message-840171249912119357">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Хотел пошутить, но не буду х)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840160388636344320&#39;)">
+                    <span class="chatlog__reference-content">
+Так и сижу без демонов.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2ee11c34c663eef974bd010fcdc7ffd9-55BD6.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Morturnaur#1267" data-user-id="398808012271255562" style="color: rgb(194,124,14)">Morturnaur</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840171433497067521" id="message-840171433497067521">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А я уже потом увидел , что у тебя не пускало в бой. Х/з чё ливнул, ушёл с рандомом.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840161282370830357&#39;)">
+                    <span class="chatlog__reference-content">
+Я бы начал с того, что само словосочетание &quot;пропаганда гомосексуализма&quot; - это бред сивой кобылы. Сексуальная ориентация не приобретается, стало быть её нельзя &quot;пропагандировать&quot;.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:38 PM</span>
+
+            <div class="chatlog__message " data-message-id="840175707190591499" id="message-840175707190591499">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">думаю, Руслан говорил про то, что пихают везде &quot;угнетаемых&quot; и показывают их отличия</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840175762933809182" id="message-840175762933809182">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сериал ведьмак хороший тому пример
+негры, лезбухи и прочее</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="840175920178528256" id="message-840175920178528256">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Сериал как избежать наказания за преступление, пидорасы повсюду</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840175950104100914" id="message-840175950104100914">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и негритянки лесбухи</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840176054408314902" id="message-840176054408314902">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">простите но накипело</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tadashi (Ruslan Mamedov)#6513" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840175920178528256&#39;)">
+                    <span class="chatlog__reference-content">
+Сериал как избежать наказания за преступление, пидорасы повсюду                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:39 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176060292792351" id="message-840176060292792351">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Говорит хач )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840176099250012180" id="message-840176099250012180">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Толерантность наше все <img class="emoji " alt="😂" title="😂" src="https://twemoji.maxcdn.com/2/72x72/1f602.png"></span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176181772681246" id="message-840176181772681246">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сказал хохол под крики москоляку на гиляку</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176228853612595" id="message-840176228853612595">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">На что спорим, что в сериале &lt;вставь название&gt; людей традиционной ориентации куда больше, чем геев/лесбиянок?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840176181772681246&#39;)">
+                    <span class="chatlog__reference-content">
+сказал хохол под крики москоляку на гиляку                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176240241672194" id="message-840176240241672194">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Хто не скаче той москаль</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840176228853612595&#39;)">
+                    <span class="chatlog__reference-content">
+На что спорим, что в сериале &lt;вставь название&gt; людей традиционной ориентации куда больше, чем геев/лесбиянок?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:40 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176275288358973" id="message-840176275288358973">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">+</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840176518164512783" id="message-840176518164512783">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Руслан, не обижайся</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176782996668416" id="message-840176782996668416">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Поздно, мне кажется</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176812427968513" id="message-840176812427968513">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ща он тебя на кебаб пустит</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:42 PM</span>
+
+            <div class="chatlog__message " data-message-id="840176816031137843" id="message-840176816031137843">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Он уже ушёл лезгинку танцевать</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:43 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177029307433000" id="message-840177029307433000">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">гетеров хоть и больше, но раньше как-то без этого снимали, а сейчас квоты взамен качеству актеров</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:44 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177242025361408" id="message-840177242025361408">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Это я тоже осуждаю</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840177323993989130" id="message-840177323993989130">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Равно как и озвучку чёрных только чёрными</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 01:44 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840177342696783903" id="message-840177342696783903">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Бредятина</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177452190007356" id="message-840177452190007356">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это вообще дичь</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840177476444749854" id="message-840177476444749854">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и блэкфейсы все эти, на которые агрятся</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177512755494973" id="message-840177512755494973">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ага</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:45 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177642673668106" id="message-840177642673668106">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">пофиг вообще, гей актер или нет, лесбуха или транс, если качественно играет и вписывается в картину без явной демонстрации</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177754023657472" id="message-840177754023657472">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention" title="Ap1.S#0633">@Ap1.S</span> раньше говорил и щас скажу называйте меня лучше черножопым а не хачом, хач это крест, следовательно христианин , я мусульманин, я не обижаюсь на то что вы не можете этого запонить. Сериал отличный, сюжет шикарный, подборка актеров на высшем уровне, но ЛГБТ переборшили здесь</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177833891332147" id="message-840177833891332147">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Руслан, если че, вместе Апи затушим</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840177642673668106&#39;)">
+                    <span class="chatlog__reference-content">
+пофиг вообще, гей актер или нет, лесбуха или транс, если качественно играет и вписывается в картину без явной демонстрации                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:46 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177882017169418" id="message-840177882017169418">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">явная пропаганда</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177973428617226" id="message-840177973428617226">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ещё раз</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840177833891332147&#39;)">
+                    <span class="chatlog__reference-content">
+Руслан, если че, вместе Апи затушим                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="840177992473772042" id="message-840177992473772042">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да он потух когда зажал 60р за карточку в зал))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178029627310110" id="message-840178029627310110">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Нельзя &quot;пропагандировать&quot; то, что нельзя приобрести</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178042042187796" id="message-840178042042187796">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тот же гендальф, актер гей, но в фильме он не пидор
+а когда нарочито показывают как целуются мужики, просто так, то вот это пропаганда)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840178029627310110&#39;)">
+                    <span class="chatlog__reference-content">
+Нельзя &quot;пропагандировать&quot; то, что нельзя приобрести                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:47 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178094995275777" id="message-840178094995275777">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а вдруг в жопу ужалят, и все)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tadashi (Ruslan Mamedov)#6513" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840177992473772042&#39;)">
+                    <span class="chatlog__reference-content">
+да он потух когда зажал 60р за карточку в зал))                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178147952558091" id="message-840178147952558091">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не зажал, а считаю что это бесполезная трата</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840178042042187796&#39;)">
+                    <span class="chatlog__reference-content">
+тот же гендальф, актер гей, но в фильме он не пидор
+а когда нарочито показывают как целуются мужики, просто так, то вот это пропаганда)                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178155405705248" id="message-840178155405705248">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">я это и пытаюсь донести</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840177833891332147&#39;)">
+                    <span class="chatlog__reference-content">
+Руслан, если че, вместе Апи затушим                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:48 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178199877910588" id="message-840178199877910588">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не доросли ещё)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178444674400286" id="message-840178444674400286">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вы сейчас слегка смешали мягкое и тёплое.
+Актёры-геи могут играть кого угодно, как угодно и когда угодно.
+Персонажи геи, когда их много, вызывают разражение у консервативной публики.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840178470561775627" id="message-840178470561775627">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Вот с актёрами чёрными сложнее )))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840178545410310185" id="message-840178545410310185">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Им, конечно, можно играть белых. Но могут не так понять )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178609561010216" id="message-840178609561010216">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а когда черных геев и лесбух много то это как?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:49 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178630465421313" id="message-840178630465421313">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это квоты</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840178650032504833" id="message-840178650032504833">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">квоты и бесят</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:50 PM</span>
+
+            <div class="chatlog__message " data-message-id="840178834924896266" id="message-840178834924896266">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Тут, скорее, стоит говорить о цвете кожи, чем о сексуальной ориентации.
+Потому что цвет кожи - это и про актёра, и про персонажа.
+А ориентацию зритель видит только у персонажа, это уже вопрос к сценаристам.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179210312351754" id="message-840179210312351754">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Но, надо понимать, если тебе ок, когда в кадре целуются мужчина и женщина, но не ок, когда в том же фильме целуются два мужчины (кстати, две женщины ок опять, вот ведь странно), то это скорее вопросы к твоей внутренней свободе (тараканам в голове, если угодно), чем к какой-то там мнимой &quot;пропаганде&quot;.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:52 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179348639449108" id="message-840179348639449108">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сейчас и в актерском составе практически обязательно иметь гомосексуалистов, негров, азиатов и индусов, и в сценарии практически обязательно должна быть сценка с нетрадиционными отношениями и сильной превозмогающей героиней</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179430646349855" id="message-840179430646349855">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Голосуем рублём, чо.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179508643364875" id="message-840179508643364875">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не нравятся фемки, не идёшь на суперженщину, или как там её.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840179210312351754&#39;)">
+                    <span class="chatlog__reference-content">
+Но, надо понимать, если тебе ок, когда в кадре целуются мужчина и женщина, но не ок, когда в том же фильме целуются два мужчины (кстати, две женщины ок опять, вот ведь странно), то это скорее вопросы к твоей внутренней свободе (тараканам в голове, если угодно), чем к какой-то там мнимой &quot;пропаганде&quot;.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179516756459530" id="message-840179516756459530">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">когда дойдем до педофилии в кино, то это тоже твои тараканы в голове, в таком случае))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:53 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179552503201803" id="message-840179552503201803">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">М...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179621114806292" id="message-840179621114806292">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты уверен, что понимаешь, чем отличается педофилия от гомосекусуальных отношений?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179732540686347" id="message-840179732540686347">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Педофилия - отклонение. Психическое.
+Гомосексуализм - норма. Да-да, даже если тебе это не нравится, это так.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179856142237746" id="message-840179856142237746">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">не считаю гомосексуализм нормой</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:54 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179904044597250" id="message-840179904044597250">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А тут не важно, что считаешь лично ты.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179920470540309" id="message-840179920470540309">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Или лично я.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:55 PM</span>
+
+            <div class="chatlog__message " data-message-id="840179927449862194" id="message-840179927449862194">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и ученые, которые якобы признали это нормой - такие же отбитые</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840179965425483786" id="message-840179965425483786">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">у нас в стране вот не считают нормой, и хорошо</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:55 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180101932646410" id="message-840180101932646410">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">У нас в стране людей забивают до смерти (Чечня). Варварская страна.
+Но, к счастью, таких дремучих людей всё меньше. И хорошо, что так.</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 01:55 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840180188297035807" id="message-840180188297035807">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">По большей части, пенсионеры и прочие старпёры. Молодые уже нормальные.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:56 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180325824593941" id="message-840180325824593941">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">если я не считаю это нормой, это не значит, что я за принудительное лечение, высмеивание или что-то подобное</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840180446749786143" id="message-840180446749786143">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это значит, что не надо в нашей стране устраивать гей-парады, демонстрировать, что это нормально и так далее</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:57 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180450534490122" id="message-840180450534490122">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">просто не надо это выносить на показ</span>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="chatlog__reactions">
+                            <div class="chatlog__reaction">
+                                <img class="emoji emoji--small" alt="621091862970630144" title="621091862970630144" src="7ds_discord_gay.html_Files/735802836339654676-F01D5.png">
+                                <span class="chatlog__reaction-count">1</span>
+                            </div>
+                    </div>
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:57 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180475788263431" id="message-840180475788263431">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">долбитесь в жопы дома и на закрытых вечеринках</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 01:57 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tadashi (Ruslan Mamedov)#6513" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840180450534490122&#39;)">
+                    <span class="chatlog__reference-content">
+просто не надо это выносить на показ                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:57 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180569089638410" id="message-840180569089638410">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Тогда напоказ не надо выносить и &quot;традиционные&quot; отношения.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840180579328458763" id="message-840180579328458763">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Тут паритет.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840180647208550400" id="message-840180647208550400">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Если показываешь поцелуи, будь готов, что участвовать могут люди любых полов.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840180674601549836" id="message-840180674601549836">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не готов? Твои тараканы.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:58 PM</span>
+
+            <div class="chatlog__message " data-message-id="840180761126895636" id="message-840180761126895636">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да ты слаанешит)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 01:59 PM</span>
+
+            <div class="chatlog__message " data-message-id="840181099597529099" id="message-840181099597529099">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да просто удивляет, откуда у людей в 21 веке отношение к обыденным вопросам из начала 20 <img class="emoji " alt="🙂" title="🙂" src="https://twemoji.maxcdn.com/2/72x72/1f642.png">
+Впрочем, я тоже не фанат вот этого всего. Но я осознаю, что это проблема во мне.
+Какой-нибудь фильм про отношения геев я смотреть не буду (типа Горбатой горы), просто неинтересно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="840181201225908234" id="message-840181201225908234">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">гачимучи норм фильм, про борьбу мужиков в раздевалке)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:00 PM</span>
+
+            <div class="chatlog__message " data-message-id="840181408713801749" id="message-840181408713801749">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Но я отдаю себе отчёт, что делить людей на касты, типа вам можно всё, а вы только на закрытых вечеринках - это путь к фашизму. Я против такого.
+А гачимучи мы тут выше обсуждали как раз, ♂fucking slave♂</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:02 PM</span>
+
+            <div class="chatlog__message " data-message-id="840181824109281331" id="message-840181824109281331">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">просто это один из первых шагов к тому, что девиации начнут считать нормой</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="840181972994228254" id="message-840181972994228254">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">такими темпами и педофилия нормой станет.....</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:03 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182006351396874" id="message-840182006351396874">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да там много всего нормой станет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840182280969519145" id="message-840182280969519145">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">гейство просто относительно безобидное
+еще 20-40-60 лет назад снимали фильмы и снимали, а сейчас в США социальная повесточка диктует всему миру, что смотреть</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840181824109281331&#39;)">
+                    <span class="chatlog__reference-content">
+просто это один из первых шагов к тому, что девиации начнут считать нормой                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182453590294568" id="message-840182453590294568">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ещё раз. То что лично ты считаешь норму девиацией (то есть придерживаешься дремучих взглядов из старины глубокой, не имеющих никакого отношения к науке) - это твоё личное дело.</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 02:05 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182527041077250" id="message-840182527041077250">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">несколько лет назад мое мнение считалось нормой и признавалось учеными</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182557631053844" id="message-840182557631053844">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Когда-то ведьм на кострах жгли, ага.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182590682169354" id="message-840182590682169354">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сейчас вылезли другие ученые, и говорят, что большая часть населения планеты - негодяи дремучие</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:05 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182605387137034" id="message-840182605387137034">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">И проверяли, ведьма ли она, утоплением в реке.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840182888523366400" id="message-840182888523366400">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Какие учёные, куда вылезли, какие несколько лет? Откуда эти фантазии?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840182911709216788" id="message-840182911709216788">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты бы хоть чуток предмет изучил.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840182938356416542" id="message-840182938356416542">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">1991 год</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840182974439489556" id="message-840182974439489556">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Это, на секундочку, 30 лет уже.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="840182994492456961" id="message-840182994492456961">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и что там было в 1991?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:07 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183006877712415" id="message-840183006877712415">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ты родился уже тогда, не?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183037484204042" id="message-840183037484204042">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">поправка об исключении гомосексуальности из списка болезней была принята Международной ассоциацией здравоохранения</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183168555679754" id="message-840183168555679754">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А так да</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183176029536276" id="message-840183176029536276">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Несколько лет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183193168511006" id="message-840183193168511006">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Буквально вчера</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:08 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183381823979520" id="message-840183381823979520">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">жаль, что в природе гомосексуалисты обречены на вымирание</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183457510195211" id="message-840183457510195211">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">инвалиды тоже</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183622954778634" id="message-840183622954778634">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да дело не в том, хорошо или плохо быть геем.
+Дело в том, что надо отдавать себе отчёт, что делить людей на &quot;правильных&quot; и &quot;неправильных&quot; - это путь к фашизму. Не надо так.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:09 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183672087117854" id="message-840183672087117854">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">инвалиды - это люди с физическими или психическими увечиями, они могут размножиться в большинстве случаев</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:10 PM</span>
+
+            <div class="chatlog__message " data-message-id="840183818270932993" id="message-840183818270932993">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я думаю, что Света о том, что в природе животные с серьёзными травмами не размножаются и умирают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183893516746812" id="message-840183893516746812">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Зачастую, их бросает стая. Или даже уничтожает.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840183922071568427" id="message-840183922071568427">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Люди, к счастью, так не делают.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184149569830952" id="message-840184149569830952">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">она просто не в ту степь речь двинула</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:11 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184181085962240" id="message-840184181085962240">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да я просто с тебя ору</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184200446738462" id="message-840184200446738462">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ты много орешь, а толку мало</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184248594071583" id="message-840184248594071583">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ты гомосексуализм сравниваешь с педофилией</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184274602426408" id="message-840184274602426408">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">алло</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184298191454218" id="message-840184298191454218">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а в чем разница?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184317975855124" id="message-840184317975855124">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">что там отклонение, что тут</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184336882860032" id="message-840184336882860032">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я же чуть выше написал в чём</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:12 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184428910346280" id="message-840184428910346280">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><span class="mention" title="Pes#2932">@PES &#128062;</span> а знаешь чего я боюсь, что скоро геи будут смеятся над нами, мол смотрите на гетеро этих...</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184438586736660" id="message-840184438586736660">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сорри, но полагаюсь на собственное мнение, а не мнение каких-то там ученых</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184439778443305" id="message-840184439778443305">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Все умрут, геи, лесбухи, негры и белые</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184471034003486" id="message-840184471034003486">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не важно все это</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184519481884732" id="message-840184519481884732">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Рано или поздно все помрем</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184552558166016" id="message-840184552558166016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">одно дело когда 2 взрослых чела осознано идут на такие отношения, а другое когда больной чел подумал, что ребенка хотеть это норма и почему бы и нет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184556824690688" id="message-840184556824690688">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Мне кажется, что иногда можно свои взгляды пересмотреть.
+Скажем, под напором фактов. Ведь весьма вероятно, что &quot;какие-то там учёные&quot; чуть лучше разбираются в каком-то вопросе, чем ты.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tadashi (Ruslan Mamedov)#6513" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184428910346280&#39;)">
+                    <span class="chatlog__reference-content">
+<span class="mention" title="Pes#2932">@PES &#128062;</span> а знаешь чего я боюсь, что скоро геи будут смеятся над нами, мол смотрите на гетеро этих...                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:13 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184566668591124" id="message-840184566668591124">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">к счастью, это тупиковая ветвь эволюции, они не размножаются, их всего несколько процентов от всего населения</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184635127496714" id="message-840184635127496714">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а когда их станет достаточно, чтобы диктовать большинству, тогда мы все умрем)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184635127496714&#39;)">
+                    <span class="chatlog__reference-content">
+а когда их станет достаточно, чтобы диктовать большинству, тогда мы все умрем)                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184732482011156" id="message-840184732482011156">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">геиапокалипсис мать его))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184732728950821" id="message-840184732728950821">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">конечно, ведь нас заставят стрить семьи только со своим полом</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840184757449916446" id="message-840184757449916446">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">и поэтому мы вме вымрем</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184761985269780" id="message-840184761985269780">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ой сори, отца его)))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="DmitryOlenin#4195" style="color: rgb(0,255,200)">DmitryOlenin</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184556824690688&#39;)">
+                    <span class="chatlog__reference-content">
+Мне кажется, что иногда можно свои взгляды пересмотреть.
+Скажем, под напором фактов. Ведь весьма вероятно, что &quot;какие-то там учёные&quot; чуть лучше разбираются в каком-то вопросе, чем ты.                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184876577456128" id="message-840184876577456128">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">пусть вот там и разбираются и в жопы друг друга ябут)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184903479984139" id="message-840184903479984139">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">я не понимаю, с чего вы вообще взяли что они будут диктовать что-то и из-за этого чего-то мы вымрем все</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:14 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184923927347202" id="message-840184923927347202">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">социология не такая уж и точная наука</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="840184947364462592" id="message-840184947364462592">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Да ни с чего они так не взяли )</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tenrai &#128062;#1994" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184903479984139&#39;)">
+                    <span class="chatlog__reference-content">
+я не понимаю, с чего вы вообще взяли что они будут диктовать что-то и из-за этого чего-то мы вымрем все                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185034883334155" id="message-840185034883334155">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это все гиперболизация, и не мы сказали, а ты</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184635127496714&#39;)">
+                    <span class="chatlog__reference-content">
+а когда их станет достаточно, чтобы диктовать большинству, тогда мы все умрем)                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:15 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185097528541184" id="message-840185097528541184">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ага, я сказала</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185247387222016" id="message-840185247387222016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну так ты говоришь, что это норма, а что такое норма?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840184923927347202&#39;)">
+                    <span class="chatlog__reference-content">
+социология не такая уж и точная наука                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185282871296030" id="message-840185282871296030">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Социоология - это как раз про проценты гомосексуальности. Которых неизвестно сколько.
+Ясно, что не большинство. Но насколько много - непонятно.
+А вот про саму ориентацию - это уже медицина, доказательная. Вполне себе наука.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:16 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185431110975509" id="message-840185431110975509">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">люди - это про эволюцию, геи - это порок эволюции, какой-то механизм</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840185660509913118" id="message-840185660509913118">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">пусть живут себе, обычных не трогают, вообще пофиг на них</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185803698208778" id="message-840185803698208778">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а кто тогда люди, которые и туда и туда?  к кому ты припишешь бисексуалов?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185880631050281" id="message-840185880631050281">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это извращенцы))</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185890394734612" id="message-840185890394734612">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">пон</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840185905604198490" id="message-840185905604198490">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">обосновано</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:18 PM</span>
+
+            <div class="chatlog__message " data-message-id="840185940269858827" id="message-840185940269858827">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Тебя же никто &quot;обычного&quot; и не трогает.
+Никто не заставляет ходить на гей-парады, да даже в анус трахаться никто не заставляет.
+А вот ты, почему-то, считаешь себя в праве диктовать не таким как ты, где и как им делать то же, что разрешено людям &quot;обычным&quot;. Это фашизм.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186037421604894" id="message-840186037421604894">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">не трогают - это когда не показывают демонстративно меньшинство, чтобы их заметили</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:19 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186172591833128" id="message-840186172591833128">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ещё раз. Если тебе не нравятся, как целуются два мужика, но нет проблем при других вариантах, это в тебе проблема, не в мужиках.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186223456682056" id="message-840186223456682056">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Либо надо запрещать <strong>любые</strong> проявления чувств публичные.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186241979121714" id="message-840186241979121714">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">одно дело, когда ты говоришь &quot;фу, они показывают что трахаются в жопы, мне не нравится&quot;, а другое когда ты говоришь &quot;фу, они просто трахаются в жопы, они ненормальные уберите&quot; хотя они тебя не трогают</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186250467344394" id="message-840186250467344394">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Что на улицах, что в фильмах.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186261494300717" id="message-840186261494300717">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а ты все под одну гребенку</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Tenrai &#128062;#1994" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840186241979121714&#39;)">
+                    <span class="chatlog__reference-content">
+одно дело, когда ты говоришь &quot;фу, они показывают что трахаются в жопы, мне не нравится&quot;, а другое когда ты говоришь &quot;фу, они просто трахаются в жопы, они ненормальные уберите&quot; хотя они тебя не трогают                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186375286030338" id="message-840186375286030338">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">они трахаются в жопы - на эти фильмы не пойду, рублем не проголосую</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:20 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186412409421875" id="message-840186412409421875">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">так не ходи</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186434274066452" id="message-840186434274066452">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тебя никто силой не заставляет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186463500894238" id="message-840186463500894238">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">так и не хожу, и не смотрю такое в онлайне</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186469997084713" id="message-840186469997084713">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну да, собственно, вопрос на этом исчерпан.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186592563822592" id="message-840186592563822592">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не нравится, не смотришь.
+Но одно дело: &quot;мне не нравится&quot;, а совсем другое: &quot;запретите это, я не хочу, чтобы это существовало&quot;.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186643016450048" id="message-840186643016450048">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ну так никто в этом чате и не говорил, чтоб запретили</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186665498574879" id="message-840186665498574879">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">как я и сказала, пихают постоянно черных и тд в фильмы и сериалы, чтобы люди, которые тоже &quot;не такие как все&quot; не чувствовали себя отбросами общества и понимали, что они такие же люди</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:21 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186680022925352" id="message-840186680022925352">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">в описании где-то пишите, что содержит гей-сцены и прочее</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186721551253526" id="message-840186721551253526">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">это не пропаганда того, что ты должен стать негром и геем</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186724507189271" id="message-840186724507189271">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Зачем?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186732631949312" id="message-840186732631949312">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">есть же рейтинги всякие про сцены насилия и прочее</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186768707944449" id="message-840186768707944449">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">О том, что там есть &quot;традиционные сцены&quot; тоже писать?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186774693216287" id="message-840186774693216287">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">чтобы публика, которой это неприятно, не посмотрела это</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186809068552222" id="message-840186809068552222">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186826753179690" id="message-840186826753179690">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">если социалочку, то для всех</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840186846973919232" id="message-840186846973919232">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">а не только для меньшинств</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186857194782741" id="message-840186857194782741">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну вот как начнут писать, так и ок.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186879218417665" id="message-840186879218417665">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">тогда и ок будет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:22 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186937704185856" id="message-840186937704185856">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А пока про поцелуи &quot;стандартные&quot; не пишут, то и про гейские писать тоже не будут. Всё логично.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:23 PM</span>
+
+            <div class="chatlog__message " data-message-id="840186993240703016" id="message-840186993240703016">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">для тебя - да)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="840187231268372490" id="message-840187231268372490">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, ещё раз. Ты же согласен, что если для тебя что-то неприемлемо, это твоё личное дело.
+Если что-то ограничивать, то для всех. А не только так, чтобы лично тебе (или группе таких, как ты) стало хорошо.
+Пока таких механизмов нет. К сожалению, возможно.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="840187326478024714" id="message-840187326478024714">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">да, пусть ограничивают, метки ставят
+пока видно только игру в одни ворота</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:24 PM</span>
+
+            <div class="chatlog__message " data-message-id="840187399014580224" id="message-840187399014580224">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Предупреждение: &quot;В фильме присутствуют сцены поцелуев людей разного пола&quot;.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840187637797224478" id="message-840187637797224478">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Игру в одни ворота, вероятно, видно потому, что много-много десятков (сотен?) лет многие люди находились в состоянии притесняемых.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840187673322717194" id="message-840187673322717194">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Чёрные, геи, женщины.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840187792398483476" id="message-840187792398483476">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Потому сейчас так заметны феминистки, BLM и ЛГБТ.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:26 PM</span>
+
+            <div class="chatlog__message " data-message-id="840187836753772554" id="message-840187836753772554">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">благо у нас этих отбитых нет</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840187971299049522" id="message-840187971299049522">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">я бы назвал все эти БЛМ социальными террористами</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840188059311407134" id="message-840188059311407134">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">которые как патентные тролли, только в части социальных законов</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:27 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188094623252492" id="message-840188094623252492">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Ну, каких-то нет, какие-то есть.
+Тут вопрос довольно сложный и комплексный. Просто повесить ярлык, конечно, проще.
+Но, в целом, вопрос угнетения чёрных в США довольно остро стоит.
+И его непонятно как решать.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188287384944690" id="message-840188287384944690">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ты наверное и негров считаешь одинаково развитыми по сравнению с другими расами?</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188371376799817" id="message-840188371376799817">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">офигеть</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188392158396447" id="message-840188392158396447">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ща погоди</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/6ce52713b50c4205b240d58c8e72b685-8F87C.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tadashi (Ruslan Mamedov)#6513" data-user-id="630735499484725250" style="color: rgb(0,255,200)">Tadashi (Ruslan Mamedov)</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188415075942420" id="message-840188415075942420">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">негра только негр может назвать негром</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 02:29 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:28 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188447426609182" id="message-840188447426609182">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ща ща, погодите)</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+            <div class="chatlog__message " data-message-id="840188477953802260" id="message-840188477953802260">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">сейчас мы расиста в чате поймаем</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188533398437919" id="message-840188533398437919">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Не негры</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/9b3b6a0845fed19f471efd0f1739c0c9-ABE6E.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Tenrai &#128062;#1994" data-user-id="265130470939820032" style="color: rgb(255,83,234)">Tenrai &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188540663103488" id="message-840188540663103488">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace"><em>фразы про гитлера и евреев</em></span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/03b9f75b12c37e9ed9dc185a81ab76e7-9F9C1.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Ap1.S#0633" data-user-id="618893665850490891" style="color: rgb(4,255,13)">Ap1.S</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188556940148737" id="message-840188556940148737">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">А афро Москвичи</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188569661603870" id="message-840188569661603870">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">нигги</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+        <div class="chatlog__reference-symbol">
+        </div>
+        <div class="chatlog__reference">
+                <img class="chatlog__reference-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+                <span class="chatlog__reference-name" title="Pes#2932" style="color: rgb(174,4,65)">PES &#128062;</span>
+                <a class="chatlog__reference-link" href="#" onclick="scrollToMessage(event, &#39;840188287384944690&#39;)">
+                    <span class="chatlog__reference-content">
+ты наверное и негров считаешь одинаково развитыми по сравнению с другими расами?                    </span>
+
+                </a>
+        </div>
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:29 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188616890253333" id="message-840188616890253333">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Я считаю, что надо не расы сравнивать, а людей.
+Среди белых же тоже есть люди, которые считают гомосексуализм девиацией.
+Что их теперь, в резервации отправлять?</span>
+
+                                <span class="chatlog__edited-timestamp" title="07-May-21 02:29 PM">(edited)</span>
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188752151576658" id="message-840188752151576658">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">ушел от ответа
+я в целом про популяцию расы негров</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188890030931998" id="message-840188890030931998">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">Какую популяцию? Я не считаю, что разумно говорить о том, что негроидная расса глупее (сильне, быстрее), чем европиоидная.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/2-ADBB4.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="Pes#2932" data-user-id="438027961774637068" style="color: rgb(174,4,65)">PES &#128062;</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188893596745768" id="message-840188893596745768">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">по сравнению с белыми (кауказианс, по европейски) и азиатами</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+
+<div class="chatlog__message-group">
+    <div class="chatlog__author-avatar-container">
+        <img class="chatlog__author-avatar" src="7ds_discord_gay.html_Files/d2aabb721a59f842dc1698ee09a3f341-5CC38.png" alt="Avatar">
+    </div>
+    <div class="chatlog__messages">
+        <span class="chatlog__author-name" title="DmitryOlenin#4195" data-user-id="225740432410279940" style="color: rgb(0,255,200)">DmitryOlenin</span>
+
+
+        <span class="chatlog__timestamp">07-May-21 02:30 PM</span>
+
+            <div class="chatlog__message " data-message-id="840188941692960798" id="message-840188941692960798">
+                    <div class="chatlog__content">
+                        <div class="markdown">
+                            <span class="preserve-whitespace">То есть в этом нет смысла никакого, если мы говорим про конкретных людей.</span>
+
+                        </div>
+                    </div>
+
+
+
+            </div>
+    </div>
+</div>
+
+</div>
+
+<div class="postamble">
+    <div class="postamble__entry">Exported 191 message(s)</div>
+</div>
+
+</body>
+
+</html>
